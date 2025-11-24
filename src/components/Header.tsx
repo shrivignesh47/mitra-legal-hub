@@ -1,9 +1,13 @@
 import { Button } from "@/components/ui/button";
-import { Scale, Menu } from "lucide-react";
+import { Scale, Menu, LogOut } from "lucide-react";
 import { useState } from "react";
+import { useAuth } from "@/hooks/useAuth";
+import { useNavigate } from "react-router-dom";
 
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { user, signOut } = useAuth();
+  const navigate = useNavigate();
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -38,12 +42,26 @@ const Header = () => {
 
           {/* Desktop Actions */}
           <div className="hidden md:flex items-center gap-3">
-            <Button variant="ghost">
-              Sign In
-            </Button>
-            <Button className="bg-primary hover:bg-primary/90">
-              Get Started
-            </Button>
+            {user ? (
+              <>
+                <Button variant="ghost" onClick={() => navigate('/dashboard')}>
+                  Dashboard
+                </Button>
+                <Button variant="ghost" onClick={signOut}>
+                  <LogOut className="w-4 h-4 mr-2" />
+                  Sign Out
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button variant="ghost" onClick={() => navigate('/auth')}>
+                  Sign In
+                </Button>
+                <Button className="bg-primary hover:bg-primary/90" onClick={() => navigate('/auth')}>
+                  Get Started
+                </Button>
+              </>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -72,12 +90,26 @@ const Header = () => {
                 About
               </a>
               <div className="flex flex-col gap-2 pt-2">
-                <Button variant="ghost" className="w-full">
-                  Sign In
-                </Button>
-                <Button className="w-full bg-primary hover:bg-primary/90">
-                  Get Started
-                </Button>
+                {user ? (
+                  <>
+                    <Button variant="ghost" className="w-full" onClick={() => navigate('/dashboard')}>
+                      Dashboard
+                    </Button>
+                    <Button variant="ghost" className="w-full" onClick={signOut}>
+                      <LogOut className="w-4 h-4 mr-2" />
+                      Sign Out
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Button variant="ghost" className="w-full" onClick={() => navigate('/auth')}>
+                      Sign In
+                    </Button>
+                    <Button className="w-full bg-primary hover:bg-primary/90" onClick={() => navigate('/auth')}>
+                      Get Started
+                    </Button>
+                  </>
+                )}
               </div>
             </nav>
           </div>
